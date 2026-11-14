@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>For宣 · 数学错题强化营</title>
+<style>
+  :root{
+    --navy:#1e3a5f; --navy2:#2f5a8f; --gold:#e0a93a; --gold2:#f2c96b;
+    --paper:#f6f3ec; --ink:#2c3440; --dim:#8a93a3; --line:#e6e0d2;
+    --ok:#2e9e5b; --bad:#d64545; --card:#ffffff;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",system-ui,sans-serif;
+    background:
+      radial-gradient(700px 380px at 90% -8%, rgba(224,169,58,.16), transparent 60%),
+      radial-gradient(700px 420px at -10% 18%, rgba(47,90,143,.12), transparent 55%),
+      linear-gradient(180deg,#fbf8f1,var(--paper) 40%,#f2eee4);
+    padding-bottom:84px;
+  }
+  .app{width:100%; max-width:640px; margin:0 auto; padding:10px 12px 18px;}
+
+  /* ================= 顶栏 ================= */
+  header{display:flex; align-items:center; gap:10px; padding:8px 2px 12px;}
+  .brand{display:flex; align-items:center; gap:10px; min-width:0;}
+  .logo{
+    width:46px; height:46px; border-radius:15px; flex:none;
+    background:linear-gradient(135deg,var(--navy),var(--navy2));
+    color:#fff; font-size:23px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 14px rgba(30,58,95,.3);
+  }
+  .brand b{font-size:clamp(20px,5vw,26px); font-weight:800; color:var(--navy); letter-spacing:.04em; white-space:nowrap;}
+  .brand small{display:block; font-size:12.5px; color:var(--dim); font-weight:600; letter-spacing:.12em; margin-top:2px;}
+  .qr-mini{margin-left:auto; text-align:right; flex:none;}
+  .qr-mini img{width:44px; height:44px; border-radius:10px; border:2px solid var(--gold);}
+
+  /* ================= 通用卡片 ================= */
+  .card{
+    background:var(--card); border-radius:22px; padding:16px 16px 18px;
+    border:1.5px solid var(--line);
+    box-shadow:0 6px 18px rgba(60,52,30,.06);
+    margin-bottom:14px;
+  }
+  .card h2{font-size:clamp(19px,5vw,24px); margin:0 0 10px; color:var(--navy); letter-spacing:.03em; display:flex; align-items:center; gap:8px;}
+  .card h2 .h-ico{font-size:22px;}
+  .card .lede{font-size:17.5px; line-height:1.75; color:#46505e; margin:0;}
+  .card .sub{font-size:13.5px; color:var(--dim); font-weight:600; margin-top:6px;}
+  .tag{display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:999px; font-size:12.5px; font-weight:700;}
+  .tag.navy{background:#e8eef7; color:var(--navy);}
+  .tag.gold{background:#fdf3dd; color:#a97914;}
+  .tag.red{background:#fdeaea; color:#c03a3a;}
+  .tag.green{background:#e7f6ec; color:#247a46;}
+
+  /* ================= 雷达图 ================= */
+  .radar-wrap{display:flex; justify-content:center; padding:4px 0;}
+  .radar-wrap svg{width:100%; max-width:360px; height:auto;}
+
+  /* ================= 列表 / 网格 ================= */
+  .loss-row{display:flex; align-items:center; gap:10px; padding:9px 2px;}
+  .loss-row .nm{flex:none; width:88px; font-size:15.5px; font-weight:700; color:#46505e;}
+  .loss-bar{flex:1; height:14px; border-radius:999px; background:#efe9dc; overflow:hidden;}
+  .loss-bar i{display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,#f2c96b,#e8843c);}
+  .loss-row .val{flex:none; width:34px; text-align:right; font-weight:800; color:var(--navy); font-size:15px;}
+
+  .chips{display:flex; gap:8px; overflow-x:auto; padding:4px 2px 10px; scrollbar-width:none;}
+  .chips::-webkit-scrollbar{display:none;}
+  .chip{
+    flex:none; border:none; cursor:pointer; border-radius:999px; padding:9px 16px;
+    font-family:inherit; font-size:15px; font-weight:700; color:#5a6472;
+    background:#fff; border:1.5px solid var(--line); box-shadow:0 3px 8px rgba(60,52,30,.05);
+  }
+  .chip.on{background:var(--navy); color:#fff; border-color:var(--navy);}
+
+  .stepline{display:flex; gap:12px; align-items:flex-start; margin:12px 0;}
+  .step-n{flex:none; width:34px; height:34px; border-radius:50%; background:var(--navy); color:#fff; font-weight:800; font-size:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(30,58,95,.25);}
+  .step-body{flex:1; min-width:0;}
+  .step-body b{display:block; font-size:16.5px; color:var(--navy); margin-bottom:2px;}
+  .step-body p{margin:0; font-size:15px; line-height:1.65; color:#46505e;}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .mini{
+    background:#fbf9f2; border:1.5px solid var(--line); border-radius:16px; padding:12px;
+  }
+  .mini b{font-size:15.5px; color:var(--navy); display:block; margin-bottom:4px;}
+  .mini p{margin:0; font-size:14px; line-height:1.6; color:#46505e;}
+
+  table.cal{width:100%; border-collapse:collapse; font-size:14.5px;}
+  table.cal th{background:var(--navy); color:#fff; padding:9px 8px; text-align:center; font-weight:700;}
+  table.cal td{border:1px solid var(--line); padding:9px 8px; text-align:center;}
+  table.cal tr td:first-child{font-weight:700; color:var(--navy);}
+  table.cal td.done{color:var(--ok); font-weight:800;}
+
+  /* ================= 题目 ================= */
+  .q-head{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;}
+  .q-num{font-size:15px; font-weight:800; color:var(--navy);}
+  .q-stem{font-size:17.5px; line-height:1.8; color:#333c48; margin:0 0 12px;}
+  .q-math{font-family:"Cambria Math","Times New Roman",serif; font-style:italic;}
+  .opts{display:flex; flex-direction:column; gap:8px;}
+  .opt{
+    display:flex; align-items:center; gap:10px; cursor:pointer; text-align:left;
+    border:1.8px solid var(--line); border-radius:14px; padding:11px 14px;
+    background:#fff; font-family:inherit; font-size:16px; color:#46505e; font-weight:600;
+  }
+  .opt .letter{flex:none; width:26px; height:26px; border-radius:8px; background:#f0ecdf; color:#5a6472; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:14px;}
+  .opt.sel{border-color:var(--navy); background:#eef3f9;}
+  .opt.sel .letter{background:var(--navy); color:#fff;}
+  .opt.correct{border-color:var(--ok); background:#e7f6ec;}
+  .opt.correct .letter{background:var(--ok); color:#fff;}
+  .opt.wrong{border-color:var(--bad); background:#fdecec;}
+  .opt.wrong .letter{background:var(--bad); color:#fff;}
+  .opt:disabled{cursor:default;}
+
+  .btns{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+  .btn{
+    flex:1; min-width:120px; border:none; cursor:pointer; border-radius:999px;
+    padding:13px 18px; font-family:inherit; font-size:16.5px; font-weight:800;
+    background:linear-gradient(135deg,var(--navy2),var(--navy)); color:#fff;
+    box-shadow:0 6px 16px rgba(30,58,95,.28);
+  }
+  .btn.gold{background:linear-gradient(135deg,#f2c96b,#e0a93a); color:#5d4308; box-shadow:0 6px 16px rgba(224,169,58,.32);}
+  .btn.ghost{background:#fff; color:var(--navy); border:1.8px solid var(--navy); box-shadow:none;}
+  .btn:active{transform:scale(.96);}
+  .btn:disabled{opacity:.45; filter:grayscale(.5); cursor:default;}
+
+  .verdict{border-radius:16px; padding:14px 15px; margin-top:14px; font-size:16px; line-height:1.7;}
+  .verdict.ok{background:#e7f6ec; border:1.5px solid #b8e0c5;}
+  .verdict.bad{background:#fdecec; border:1.5px solid #f0b9b9;}
+  .verdict b{font-size:17px;}
+  .sol{margin-top:12px; background:#fbf8f0; border:1.5px dashed var(--gold); border-radius:16px; padding:13px 15px;}
+  .sol b{color:var(--navy);}
+  .sol p{margin:7px 0 0; font-size:15px; line-height:1.75; color:#46505e;}
+  .why{margin-top:10px; background:#eef3f9; border-radius:14px; padding:11px 14px; font-size:14.5px; line-height:1.7; color:#46505e;}
+  .why b{color:var(--bad);}
+  .why:before{content:"⚠️ 错因提醒  "; font-weight:800; color:var(--bad);}
+
+  /* 复习进度 */
+  .bar-row{display:flex; align-items:center; gap:10px; margin:8px 0;}
+  .bar-row .nm{flex:none; width:96px; font-size:14.5px; font-weight:700; color:#46505e;}
+  .bar-track{flex:1; height:16px; border-radius:999px; background:#efe9dc; overflow:hidden;}
+  .bar-track i{display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--gold2),var(--gold)); transition:width .4s;}
+  .bar-row .val{flex:none; width:52px; text-align:right; font-size:14px; font-weight:800; color:var(--navy);}
+
+  .rv-item{display:flex; align-items:center; gap:10px; padding:10px 2px; border-bottom:1px dashed var(--line);}
+  .rv-item:last-child{border-bottom:none;}
+  .rv-item .q-t{flex:1; min-width:0;}
+  .rv-item .q-t b{font-size:15px; color:var(--navy); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .rv-item .q-t small{font-size:12.5px; color:var(--dim);}
+  .rv-due{flex:none; font-size:13px; font-weight:800; color:var(--bad);}
+
+  /* 底部导航 */
+  nav{
+    position:fixed; left:0; right:0; bottom:0; z-index:80;
+    background:rgba(255,255,255,.97); backdrop-filter:blur(6px);
+    border-top:1px solid var(--line); box-shadow:0 -6px 20px rgba(60,52,30,.08);
+  }
+  nav .tabs{max-width:640px; margin:0 auto; display:flex;}
+  nav button{
+    flex:1; border:none; background:none; cursor:pointer; padding:9px 0 11px;
+    font-family:inherit; font-size:12px; font-weight:700; color:var(--dim);
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+  }
+  nav button .ti{font-size:21px;}
+  nav button.on{color:var(--navy);}
+  nav button.on .ti{transform:translateY(-1px);}
+
+  .view{display:none;}
+  .view.on{display:block;}
+
+  footer{text-align:center; font-size:12.5px; color:var(--dim); font-weight:600; margin-top:6px; line-height:1.8;}
+  .hidden{display:none !important;}
+
+  .toast{
+    position:fixed; left:50%; top:26%; z-index:99; pointer-events:none;
+    transform:translate(-50%,-50%) scale(.5); opacity:0;
+    font-size:clamp(24px,6vw,34px); font-weight:800; letter-spacing:.05em; color:#fff;
+    background:rgba(30,58,95,.9); border-radius:999px; padding:12px 26px;
+    box-shadow:0 10px 30px rgba(30,58,95,.4); white-space:nowrap;
+  }
+  .toast.show{animation:pop 1.1s cubic-bezier(.2,.9,.25,1) both;}
+  @keyframes pop{
+    0%{opacity:0; transform:translate(-50%,-50%) scale(.5);}
+    15%{opacity:1; transform:translate(-50%,-50%) scale(1.06);}
+    30%{transform:translate(-50%,-50%) scale(1);}
+    75%{opacity:1;}
+    100%{opacity:0; transform:translate(-50%,-62%) scale(1.02);}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="logo">📘</div>
+      <div><b>For宣</b><small>高三数学 · 1对1 诊断与冲刺</small></div>
+    </div>
+    <div class="qr-mini" id="qrMiniBox" style="display:none">
+      <img id="qrMini" alt="扫码练习"/>
+      <div style="font-size:11px;color:var(--dim);font-weight:700">微信扫码</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 诊断 -->
+    <section class="view" id="view-diag"></section>
+    <!-- 方法 -->
+    <section class="view" id="view-method"></section>
+    <!-- 真题 -->
+    <section class="view" id="view-practice"></section>
+    <!-- 计划 -->
+    <section class="view" id="view-plan"></section>
+  </main>
+
+  <footer>辽宁省高考数学 · 新高考Ⅱ卷 真题练习<br/>题目均出自 2024–2025 新课标Ⅱ卷真题（辽宁适用）</footer>
+</div>
+
+<nav>
+  <div class="tabs">
+    <button data-tab="diag"><span class="ti">🩺</span>诊断</button>
+    <button data-tab="method"><span class="ti">🧠</span>方法</button>
+    <button data-tab="practice"><span class="ti">✍️</span>真题</button>
+    <button data-tab="plan"><span class="ti">🗓️</span>计划</button>
+  </div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 数据层 ================= */
+const RADAR = [
+  {name:'函数与导数', v:90},
+  {name:'数列', v:80},
+  {name:'三角函数', v:70},
+  {name:'复数与向量', v:75},
+  {name:'立体几何', v:55},
+  {name:'新定义创新', v:85}
+];
+
+const DIAG = {
+  intro:'宣，24 张错题照片我一张张看完了。你的问题不在“不努力”，而在“力气用错了地方”——先把最该拿的分守住，再集中火力攻两个战场。',
+  points:[
+    {ico:'🎯', t:'压轴丢分集中在这两个战场', d:'函数与导数（极值点偏移、含参讨论、构造辅助函数）和新定义创新题（取整函数、封闭数列、子集和、对数似然），占你失分的 60% 以上。', tag:'攻坚方向', cls:'red'},
+    {ico:'⚡', t:'中档题丢分多是“会而不对”', d:'复数 i 的运算、投影向量、等比公比漏掉负号、集合解方程漏解——这些题你思路都会，丢在最后一步的计算和符号上。', tag:'细心可救', cls:'gold'},
+    {ico:'🛡️', t:'立体几何是你的得分盘', d:'24 张错题里立体几何最少（折叠线面角、二面角）。先把这块守稳，它是你稳定的分数来源。', tag:'稳住别丢', cls:'green'}
+  ],
+  priority:[
+    {n:'第一步', t:'保基本盘', d:'立体几何 + 集合/复数/不等式，每次考试先拿满。'},
+    {n:'第二步', t:'稳中档', d:'三角函数图象、解三角形、数列通项与前 n 项和、向量坐标。'},
+    {n:'第三步', t:'攻压轴', d:'导数极值点偏移、含参恒成立、新定义读题。'}
+  ],
+  causes:[
+    {t:'运算与符号', d:'复数除法、等比公比 ±、分母有理化、负号遗漏。', tag:'最高频'},
+    {t:'概念定义不清', d:'纯虚数、投影向量、封闭数列、取整函数“读不懂”。', tag:'高频'},
+    {t:'分类讨论漏解', d:'含参单调性、指数方程解的个数、集合方程漏根。', tag:'高频'},
+    {t:'构造法不熟', d:'f′(x)−2f(x)>0、g(t)=f(x₁+t)−f(x₁−t) 这类构造不会下手。', tag:'压轴'},
+    {t:'新定义读题慢', d:'取整函数、子集和 S_T、对数似然 L(θ) 读半天进不去。', tag:'压轴'},
+    {t:'时间分配', d:'压轴题耗太久，导致前面能拿的分没时间检查。', tag:'策略'}
+  ]
+};
+
+const GROUPS = [
+  {id:'g_base', name:'基础保分', icon:'🧮', loss:55, tagline:'集合 / 不等式 · 2 题', desc:'送分题，考场上必须一次做对。'},
+  {id:'g_vec', name:'复数与向量', icon:'🧭', loss:75, tagline:'复数 i 运算 / 向量坐标 · 2 题', desc:'“会而不对”重灾区，重在符号与坐标。'},
+  {id:'g_tri', name:'三角函数', icon:'📐', loss:70, tagline:'图象性质 / 恒等 / 解三角形 · 3 题', desc:'整体代换 + 和差化积，步骤要写全。'},
+  {id:'g_seq', name:'数列', icon:'🪜', loss:80, tagline:'等差 / 等比 通项与求和 · 3 题', desc:'小数据先列项，别急着代公式。'},
+  {id:'g_func', name:'函数与导数', icon:'📈', loss:90, tagline:'极值 / 零点 / 偏移 · 3 题', desc:'你的主战场：构造 + 分类讨论 + 偏移。'},
+  {id:'g_new', name:'新定义创新', icon:'🧩', loss:85, tagline:'概率递推 / 读定义 · 1 题', desc:'读题慢就输一半，先枚举小例子。'},
+  {id:'g_geo', name:'立体几何', icon:'🧊', loss:55, tagline:'折叠 / 二面角 · 1 题', desc:'得分盘：先证后算，建系要规范。'}
+];
+
+const QS = [
+  {
+    id:'q01', g:'g_vec', t:'single', num:'2025 新Ⅱ·2', tag:'复数',
+    stem:'已知 <span class="q-math">z = 1 + i</span>，则 <span class="q-math">1 / (z − 1)</span> =',
+    opts:['−i','i','−1','1'], ans:0,
+    sol:'z − 1 = i，所以 1/(z−1) = 1/i。分子分母同乘 i：1/i = i/i² = i/(−1) = −i。',
+    why:'错题里“纯虚数求虚部”就栽在虚数单位 i 的化简上。<b>牢记</b>：i² = −1，1/i = −i。',
+    tip:'复数除法：分子分母同乘分母的共轭；先把 i 的幂化成 ±1、±i 再算。',
+    wrongRef:'对应错题：复数 z 为纯虚数求虚部'
+  },
+  {
+    id:'q02', g:'g_base', t:'single', num:'2025 新Ⅱ·3', tag:'集合',
+    stem:'已知集合 <span class="q-math">A = {−4, 0, 1, 2, 8}</span>，<span class="q-math">B = {x | x³ = x}</span>，则 <span class="q-math">A ∩ B</span> =',
+    opts:['{0, 1, 2}','{1, 2, 8}','{2, 8}','{0, 1}'], ans:3,
+    sol:'由 x³ = x 得 x³ − x = 0，即 x(x−1)(x+1) = 0，所以 B = {−1, 0, 1}。与 A 取交集得 {0, 1}。',
+    why:'集合运算漏解——只想到 x = 0、x = 1，把 x = −1 漏掉了。<b>先移项再因式分解，宁可列全再筛</b>。',
+    tip:'解方程永远“移项→因式分解”两步走；x³ = x 不要直接两边约 x（会丢根）。',
+    wrongRef:'对应错题：集合运算 / 方程漏解'
+  },
+  {
+    id:'q03', g:'g_base', t:'single', num:'2025 新Ⅱ·4', tag:'不等式',
+    stem:'不等式 <span class="q-math">(x − 4)/(x − 1) ≥ 2</span> 的解集是',
+    opts:['{x | −2 ≤ x ≤ 1}','{x | x ≤ −2}','{x | −2 ≤ x < 1}','{x | x > 1}'], ans:2,
+    sol:'移项：(x−4)/(x−1) − 2 ≥ 0，通分得 (−x−2)/(x−1) ≥ 0，两边乘 −1 变号：(x+2)/(x−1) ≤ 0，解得 −2 ≤ x < 1（x ≠ 1）。',
+    why:'分式不等式端点：x = 1 让分母为 0 不能取；x = −2 让分子为 0 可以取。<b>分母零点永远挖掉</b>。',
+    tip:'一律“移项通分 → 化成乘积 ≤ 0 → 穿根”；千万别直接两边乘 (x−1)（不知正负）。',
+    wrongRef:'对应错题：含参 / 分式不等式'
+  },
+  {
+    id:'q04', g:'g_tri', t:'single', num:'2025 新Ⅱ·5', tag:'解三角形',
+    stem:'在 △ABC 中，<span class="q-math">BC = 2，AC = 1 + √3，AB = √6</span>，则 <span class="q-math">A</span> =',
+    opts:['45°','60°','120°','135°'], ans:0,
+    sol:'cosA = (AC² + AB² − BC²) / (2·AC·AB) = ((1+√3)² + 6 − 4) / (2(1+√3)√6) = (6+2√3)/(2(1+√3)√6) = √2/2，所以 A = 45°。',
+    why:'对边 / 邻边代错，或分母有理化卡壳。<b>“三边求角”先列全余弦定理再代</b>。',
+    tip:'余弦定理：cosA = (b² + c² − a²)/(2bc)，a 是角 A 的对边，别代错。',
+    wrongRef:'对应错题：△ABC 中线求面积（同属解三角形）'
+  },
+  {
+    id:'q05', g:'g_tri', t:'single', num:'2025 新Ⅱ·8', tag:'三角恒等',
+    stem:'已知 <span class="q-math">0 < α < π</span>，<span class="q-math">cos(α/2) = √5/5</span>，则 <span class="q-math">sin(α − π/4)</span> =',
+    opts:['√2/10','√2/5','3√2/10','7√2/10'], ans:3,
+    sol:'α/2 ∈ (0, π/2)，sin(α/2) = √(1 − 1/5) = 2√5/5。sinα = 2·(2√5/5)(√5/5) = 4/5，cosα = 1/5 − 4/5 = −3/5。sin(α−π/4) = (4/5)(√2/2) − (−3/5)(√2/2) = 7√2/10。',
+    why:'半角开方符号、展开时 cosα 的负号——两个坑都踩了。<b>开方先定象限符号</b>。',
+    tip:'半角公式开方前，先判断角在哪个象限决定 ±；两角差用 sin(α−β)=sinαcosβ−cosαsinβ。',
+    wrongRef:'对应错题：三角恒等变换'
+  },
+  {
+    id:'q06', g:'g_tri', t:'solve', num:'2025 新Ⅱ·15（13分）', tag:'三角图象性质',
+    stem:'已知 <span class="q-math">f(x) = cos(2x + φ)（0 ≤ φ < π）</span>，<span class="q-math">f(0) = 1/2</span>。<br/>(1) 求 φ；<br/>(2) 设 <span class="q-math">g(x) = f(x) + f(x − π/6)</span>，求 g(x) 的值域和单调区间。',
+    ansText:'φ = π/3；值域 [−√3, √3]；单调减区间 [−π/12 + kπ, 5π/12 + kπ]，增区间 [5π/12 + kπ, 11π/12 + kπ]（k ∈ Z）',
+    sol:'(1) f(0) = cosφ = 1/2，φ ∈ [0, π)，故 φ = π/3。<br/>(2) f(x−π/6) = cos(2x − π/3 + π/3) = cos2x，所以 g(x) = cos(2x+π/3) + cos2x = 2cos(2x+π/6)cos(π/6) = √3·cos(2x+π/6)。值域 [−√3, √3]。<br/>令 2kπ ≤ 2x+π/6 ≤ π+2kπ，得减区间 [−π/12+kπ, 5π/12+kπ]；令 π+2kπ ≤ 2x+π/6 ≤ 2π+2kπ，得增区间 [5π/12+kπ, 11π/12+kπ]。',
+    why:'A sin(ωx+φ) 类题：先定 φ，再整体代换求周期 / 单调 / 对称。<b>端点别漏，区间要带 kπ</b>。',
+    tip:'f(x−π/6) 代入时把“2x+φ”整体换成“2(x−π/6)+φ”；和差化积记 cosA + cosB = 2cos((A+B)/2)cos((A−B)/2)。',
+    wrongRef:'对应错题：A sin(ωx+φ) 部分图象 / 对称中心 / 平移'
+  },
+  {
+    id:'q07', g:'g_seq', t:'single', num:'2025 新Ⅱ·7', tag:'等差数列',
+    stem:'记 <span class="q-math">Sₙ</span> 为等差数列 {aₙ} 的前 n 项和，若 <span class="q-math">S₃ = 6，S₅ = −5</span>，则 <span class="q-math">S₆</span> =',
+    opts:['−20','−15','−10','−5'], ans:1,
+    sol:'S₃ = 3a₁ + 3d = 6，S₅ = 5a₁ + 10d = −5，联立得 a₁ + d = 2，a₁ + 2d = −1，解得 d = −3，a₁ = 5。S₆ = 6a₁ + 15d = 30 − 45 = −15。',
+    why:'Sₙ 公式记错或代入错。<b>先列 a₁、d 的方程组，再回头算 S₆</b>，最快。',
+    tip:'Sₙ = na₁ + n(n−1)d/2；也可记 Sₙ = An² + Bn（无常数项，A = d/2）。',
+    wrongRef:'对应错题：等差前 n 项和最值'
+  },
+  {
+    id:'q08', g:'g_seq', t:'multi', num:'2025 新Ⅱ·9（多选）', tag:'等比数列',
+    stem:'记 <span class="q-math">Sₙ</span> 为等比数列 {aₙ} 的前 n 项和，q 为公比，q > 0。若 <span class="q-math">S₃ = 7，a₃ = 1</span>，则',
+    opts:['q = 1/2','a₅ = 1/9','S₅ = 8','aₙ + Sₙ = 8'], ans:[0,3],
+    sol:'S₃ = a₁(1+q+q²) = 7，a₃ = a₁q² = 1，相除得 (1+q+q²)/q² = 7，即 6q² − q − 1 = 0，q = 1/2（舍负），a₁ = 4。<br/>a₅ = a₁q⁴ = 1/4 ≠ 1/9（B 错）；S₅ = 7 + a₄ + a₅ = 7 + 1/2 + 1/4 = 31/4 ≠ 8（C 错）；aₙ + Sₙ = aₙ + (8 − aₙ) = 8（D 对）。',
+    why:'等比求和把 q = 1 与 q ≠ 1 混用；S₅ 直接代公式把 q⁵ 算错。<b>小数据直接列项</b>：a₄、a₅ 手算出来。',
+    tip:'等比多选别急着套 Sₙ 公式，先写出 a₁、q，再把 a₃~a₅ 逐项列出来对照选项。',
+    wrongRef:'对应错题：等比数列 a₅ / a₂·a₈ 等'
+  },
+  {
+    id:'q09', g:'g_seq', t:'fill', num:'2024 新Ⅱ·12', tag:'等差数列',
+    stem:'记 <span class="q-math">Sₙ</span> 为等差数列 {aₙ} 的前 n 项和，若 <span class="q-math">a₃ + a₄ = 7，3a₂ + a₅ = 5</span>，则 <span class="q-math">S₁₀</span> = ______。',
+    ansText:'95',
+    sol:'a₃ + a₄ = 2a₁ + 5d = 7；3a₂ + a₅ = 4a₁ + 7d = 5。联立解得 d = 3，a₁ = −4。S₁₀ = 10a₁ + 45d = −40 + 135 = 95。',
+    why:'这题考察<b>用通项转成 a₁、d 的方程组</b>。先写 aₙ = a₁ + (n−1)d，再代入两个条件，别直接猜具体项。',
+    tip:'Sₙ = na₁ + n(n−1)d/2 直接代最省事；解出 a₁、d 后别忘代回检验。',
+    wrongRef:'对应错题：等差前 n 项和 / 公差'
+  },
+  {
+    id:'q10', g:'g_vec', t:'fill', num:'2025 新Ⅱ·12', tag:'平面向量',
+    stem:'已知平面向量 <span class="q-math">a = (x, 1)，b = (x − 1, 2x)</span>，若 <span class="q-math">a ⊥ (a − b)</span>，则 <span class="q-math">|a|</span> = ______。',
+    ansText:'√2',
+    sol:'a − b = (1, 1 − 2x)。a ⊥ (a−b) 即 a·(a−b) = 0：x·1 + 1·(1 − 2x) = 1 − x = 0，x = 1。于是 a = (1, 1)，|a| = √(1² + 1²) = √2。',
+    why:'垂直 → 数量积为 0；坐标错位（把 a·b 当成 a·(a−b)）。<b>先算出 a−b 再点乘</b>。',
+    tip:'a ⊥ b ⟺ a·b = 0；坐标点乘是对应分量相乘再相加。',
+    wrongRef:'对应错题：a=(2,1), b=(1,λ) 平行 / 投影 / 夹角'
+  },
+  {
+    id:'q11', g:'g_func', t:'multi', num:'2025 新Ⅱ·10（多选）', tag:'奇函数与极值',
+    stem:'已知 <span class="q-math">f(x)</span> 是定义在 R 上的奇函数，且当 x > 0 时，<span class="q-math">f(x) = (x² − 3)eˣ + 2</span>，则',
+    opts:['f(0) = 0','当 x < 0 时，f(x) = −(x² − 3)e⁻ˣ − 2','f(x) ≥ 2 当且仅当 x ≥ √3','x = −1 是 f(x) 的极大值点'], ans:[0,1,3],
+    sol:'A：奇函数在 0 有定义 → f(0) = 0。<br/>B：x < 0 时 −x > 0，f(x) = −f(−x) = −[(x²−3)e⁻ˣ + 2]。<br/>D：x > 0 时 f′(x) = (x² + 2x − 3)eˣ = (x−1)(x+3)eˣ，x = 1 是极小点，由奇对称 x = −1 是极大点。<br/>C：f(−1) = −f(1) = 2e − 2 > 2，但 −1 < √3，所以“当且仅当”错。',
+    why:'奇函数延拓符号颠倒；“当且仅当”结论要用反例验证。<b>举一个反例就能推翻 C</b>。',
+    tip:'奇函数：f(0)=0，f(−x)=−f(x)；求导后看正负判极值，别只看 f′=0。',
+    wrongRef:'对应错题：偶函数 + f(x)+f′(x)=2eˣ、导数单调性'
+  },
+  {
+    id:'q12', g:'g_func', t:'fill', num:'2025 新Ⅱ·13', tag:'极值点',
+    stem:'若 <span class="q-math">x = 2</span> 是函数 <span class="q-math">f(x) = (x − 1)(x − 2)(x − a)</span> 的极值点，则 <span class="q-math">f(0)</span> = ______。',
+    ansText:'−4',
+    sol:'x = 2 既是零点（f(2) = 0）又是极值点，所以 x = 2 是二重根，即 a = 2，f(x) = (x−1)(x−2)²。于是 f(0) = (−1)(−2)² = −4。',
+    why:'看到“极值点”要先写 f′(x₀) = 0；本题结合 f(x₀) = 0 可认出重根，比硬求导更快。',
+    tip:'三次函数里“零点又是极值点 ⟺ 二重根”；也可令 f′(2)=0 解 a 验证。',
+    wrongRef:'对应错题：x = 1 处有极值，求参数 a'
+  },
+  {
+    id:'q13', g:'g_func', t:'solve', num:'2025 新Ⅱ·18（17分）', tag:'导数综合 / 偏移',
+    stem:'已知函数 <span class="q-math">f(x) = ln(1 + x) − x + ½x² − kx³</span>，其中 <span class="q-math">0 < k < 1/3</span>。<br/>(1) 证明：f(x) 在 (0, +∞) 存在唯一极值点和唯一零点；<br/>(2) 设 x₁、x₂ 分别为 f(x) 在 (0, +∞) 的极值点和零点：<br/>(i) g(t) = f(x₁+t) − f(x₁−t)，证明 g(t) 在 (0, x₁) 单调递减；<br/>(ii) 比较 2x₁ 与 x₂ 的大小，并证明。',
+    ansText:'(1) 唯一极大值点 x₁ = 1/(3k) − 1，唯一零点 x₂ ∈ (x₁, 1/(2k))；(2)(ii) 结论：2x₁ > x₂',
+    sol:'(1) f′(x) = 1/(1+x) − 1 + x − 3kx² = x²(1−3k−3kx)/(1+x)。当 0 < x < x₁ = 1/(3k) − 1 时 f′ > 0，x > x₁ 时 f′ < 0，故 x₁ 是唯一极大值点。又 f(0)=0、f(x₁)>0、f(1/(2k)) = ln(1+1/(2k)) − 1/(2k) < 0，由零点存在定理得唯一零点 x₂ ∈ (x₁, 1/(2k))。<br/>(2)(i) g′(t) = f′(x₁+t) + f′(x₁−t) = 6kt²(t² − x₁² − 2x₁)/((1+x₁)² − t²) < 0（0 < t < x₁），故 g 递减。<br/>(ii) g 在 (0,x₁) 递减 → g(x₁) < g(0) = 0，即 f(2x₁) < 0 = f(x₂)；f 在 (x₁,+∞) 递减，所以 2x₁ > x₂。',
+    why:'这是你失分最重的“极值点偏移”题型。<b>通法</b>：构造 g(t) = f(x₁+t) − f(x₁−t)，证 g′ < 0，再用单调性比大小。',
+    tip:'第(1)问的 x₁ 表达式一定要先求出，第(2)问全程要用它；偏移题三步：构造 g(t) → 判 g′ → 用单调性。',
+    wrongRef:'对应错题：ln(1+x)−x+a 两零点之和、导数压轴第 19 题'
+  },
+  {
+    id:'q14', g:'g_new', t:'solve', num:'2025 新Ⅱ·19（17分）', tag:'概率递推 / 新定义',
+    stem:'甲、乙两人进行乒乓球练习，每球胜者得 1 分、负者得 0 分。设每球甲胜的概率为 p（1/2 < p < 1），乙胜的概率为 q，p + q = 1，各球胜负相互独立。对正整数 k ≥ 2，记 pₖ 为打完 k 个球后甲比乙至少多得 2 分的概率，qₖ 为打完 k 个球后乙比甲至少多得 2 分的概率。<br/>(1) 求 p₃、p₄（用 p 表示）；<br/>(2) 若 (p₄ − p₃)/(q₄ − q₃) = 4，求 p；<br/>(3) 证明：对任意正整数 m，p₂ₘ₊₁ − q₂ₘ₊₁ < p₂ₘ − q₂ₘ < p₂ₘ₊₂ − q₂ₘ₊₂。',
+    ansText:'(1) p₃ = p³；p₄ = p⁴ + 4p³q；(2) p = 2/3；(3) 证明见解析',
+    sol:'(1) 打完 3 球“差至少 2 分”只能是差 3 分（甲全胜），p₃ = p³。打完 4 球差为 4 或 2：p₄ = p⁴ + C(4,3)p³q = p⁴ + 4p³q。<br/>(2) p₄ − p₃ = p³(p + 4q − 1) = p³(3 − 3p) = 3p³q；同理 q₄ − q₃ = 3pq³。相除得 p²/q² = 4，p/q = 2，结合 p + q = 1 得 p = 2/3。<br/>(3) 按奇偶分情况，用递推 pₖ₊₂ − pₖ 与 q 的关系及单调性放缩即可证（略）。',
+    why:'新定义读题慢是丢分主因——<b>先枚举“打完 k 球差多少分”</b>再列概率。错题里取整函数、封闭数列、子集和同理。',
+    tip:'创新题三步骤：读定义 → 举小例子验证（k=3 把所有情况列出来）→ 再算一般项；别一上来就套公式。',
+    wrongRef:'对应错题：取整函数 / 封闭数列 / 子集和 / 对数似然'
+  },
+  {
+    id:'q15', g:'g_geo', t:'solve', num:'2025 新Ⅱ·17（15分）', tag:'立体几何 / 翻折',
+    stem:'四边形 ABCD 中，AB ∥ CD，∠DAB = 90°，F 为 CD 中点，E 在 AB 上，EF ∥ AD，AB = 3AD，CD = 2AD。将四边形 EFDA 沿 EF 翻折至 EFD′A′，使面 EFD′A′ 与面 EFCB 所成二面角为 60°。<br/>(1) 证明：A′B ∥ 平面 CD′F；<br/>(2) 求面 BCD′ 与面 EFD′A′ 所成二面角的正弦值。',
+    ansText:'(1) 证明见解析；(2) 二面角的正弦值 = √42/7',
+    sol:'(1) 由 EB ∥ FC、A′E ∥ D′F 得平面 A′EB ∥ 平面 D′FC，又 A′B ⊂ 平面 A′EB，故 A′B ∥ 平面 CD′F。<br/>(2) 设 AD = 1，EF ⊥ A′E 且 EF ⊥ EB，故 ∠A′EB = 60° 为二面角平面角。建系得面 EFD′A′ 法向量 n₁ = (0, −√3, 1)，面 BCD′ 法向量 n₂ = (−√3, √3, 1)。cosθ = |n₁·n₂|/(|n₁||n₂|) = √7/7，sinθ = √42/7。',
+    why:'翻折题先找“翻折前后不变量”（EF 的垂直关系不变），再建系。<b>法向量算完用 sin² + cos² = 1 验算</b>。',
+    tip:'立体几何是你的得分盘：先证后算，建系写清原点和坐标轴，最后一步别丢绝对值。',
+    wrongRef:'对应错题：等边三角形折叠线面角 / 二面角取值范围'
+  }
+];
+
+const METHODS = {
+  five:[
+    {t:'还原现场', d:'盖住答案重做一遍，先判断：是算错了，还是根本没思路？两种错，补法完全不同。'},
+    {t:'贴错因标签', d:'给每道错题打标签：运算 / 概念 / 分类 / 构造 / 时间。同一标签攒够 3 道，就是你的真短板。'},
+    {t:'抄通法', d:'不只抄正确答案，要抄“这类题的通用步骤”（本页方法卡的写法），下次换题面也能用。'},
+    {t:'同考点真题 3 道', d:'在“真题”页挑同考点的题连做 3 道，做完立刻看解析、对错因。'},
+    {t:'定时重做', d:'第 1 / 3 / 7 / 14 天各回来重做一次，做对才移出复习队列（“计划”页自动帮你排期）。'}
+  ],
+  cards:[
+    {t:'函数零点', d:'图象 + 零点存在定理 + 导数判单调。先画草图看有几个交点，再用 f(a)f(b)<0 定位。'},
+    {t:'恒成立 / 存在性', d:'能分离参数就分离，转成求最值；不能分离就构造 h(x) 求导讨论。'},
+    {t:'数列通项', d:'等差等比直接用公式；递推式往“等差/等比”上凑（同加、同乘、取倒数）。'},
+    {t:'三角图象', d:'先定 A、ω、φ，再整体代换求单调 / 对称 / 最值，区间记得带 kπ。'},
+    {t:'平面向量', d:'能建系就坐标法（垂直点乘=0）；不能建系就用基底法。'},
+    {t:'极值点偏移', d:'构造 g(t) = f(x₁+t) − f(x₁−t)，证 g′<0，再用单调性比较 2x₁ 与 x₂。'},
+    {t:'新定义题', d:'读定义 → 举最小例子验证 → 再推一般项；别一上来套公式。'}
+  ],
+  time:[
+    {t:'单选 8 题（40 分）', d:'约 25 分钟，前 6 题必须稳，第 7、8 题超 2 分钟没思路先跳过。'},
+    {t:'多选 3 题（18 分）', d:'约 12 分钟，多选题宁可少选拿部分分，别死磕。'},
+    {t:'填空 3 题（15 分）', d:'约 13 分钟，最后一道填空压轴不会就先放着。'},
+    {t:'解答 5 题（77 分）', d:'约 80 分钟，前 3 题拿满，导数 / 概率压轴留 20~25 分钟，写不完也要把第(1)问拿下。'}
+  ]
+};
+/* __JS_DATA_END__ */
+/* ================= 渲染层 ================= */
+function $(id){ return document.getElementById(id); }
+
+function radarSVG(){
+  const cx=150, cy=150, R=104, N=RADAR.length;
+  const pt=(i,r)=>{ const a=Math.PI/180*(60*i-90); return [cx+r*Math.cos(a), cy+r*Math.sin(a)].map(v=>v.toFixed(1)).join(','); };
+  let grids='';
+  [0.2,0.4,0.6,0.8,1].forEach(g=>{
+    const pts=[];
+    for(let i=0;i<N;i++) pts.push(pt(i,R*g));
+    grids += `<polygon points="${pts.join(' ')}" fill="none" stroke="#e6e0d2" stroke-width="1"/>`;
+  });
+  let axes='';
+  for(let i=0;i<N;i++) axes += `<line x1="${cx}" y1="${cy}" x2="${pt(i,R).split(',')[0]}" y2="${pt(i,R).split(',')[1]}" stroke="#e6e0d2" stroke-width="1"/>`;
+  const data=[];
+  for(let i=0;i<N;i++) data.push(pt(i,R*RADAR[i].v/100));
+  let labels='';
+  for(let i=0;i<N;i++){
+    const l=pt(i,R+24).split(',');
+    const [lx,ly]=l.map(Number);
+    const an=ly>cx?'start':(ly<cx-20?'end':'middle');
+    const tx = lx<130?lx-6:(lx>170?lx+6:lx);
+    labels += `<text x="${tx}" y="${ly+4}" font-size="12.5" font-weight="700" fill="#46505e">${RADAR[i].name}${RADAR[i].v}</text>`;
+  }
+  return `<svg viewBox="0 0 300 300" aria-hidden="true">
+    ${grids}${axes}
+    <polygon points="${data.join(' ')}" fill="rgba(216,93,74,.28)" stroke="#d85d4a" stroke-width="2" stroke-linejoin="round"/>
+    ${RADAR.map((r,i)=>`<circle cx="${pt(i,R*r.v/100).split(',')[0]}" cy="${pt(i,R*r.v/100).split(',')[1]}" r="3.2" fill="#d85d4a"/>`).join('')}
+    ${labels}
+    <text x="150" y="16" text-anchor="middle" font-size="12" fill="#8a93a3" font-weight="600">失分指数（越高越要补）</text>
+  </svg>`;
+}
+
+function renderDiag(){
+  const qr = $('qrMini');
+  if (qr && window.__URL__) qr.src = 'qr.png';
+  $('qrMiniBox').style.display = 'none';
+  $('view-diag').innerHTML = `
+    <div class="card">
+      <h2><span class="h-ico">🩺</span>诊断结论</h2>
+      <p class="lede">${DIAG.intro}</p>
+    </div>
+    ${DIAG.points.map(p=>`
+      <div class="card">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="font-size:26px">${p.ico}</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <b style="font-size:17.5px;color:var(--navy)">${p.t}</b>
+              <span class="tag ${p.cls}">${p.tag}</span>
+            </div>
+            <p style="font-size:15.5px;line-height:1.7;color:#46505e;margin:6px 0 0">${p.d}</p>
+          </div>
+        </div>
+      </div>`).join('')}
+
+    <div class="card">
+      <h2><span class="h-ico">📡</span>失分雷达图</h2>
+      <div class="radar-wrap">${radarSVG()}</div>
+      <p class="sub">数值是我根据 24 张错题归纳的“失分指数”，越高说明这块越需要花力气。</p>
+    </div>
+
+    <div class="card">
+      <h2><span class="h-ico">📊</span>分项失分</h2>
+      ${[...RADAR].sort((a,b)=>b.v-a.v).map(r=>`
+        <div class="loss-row">
+          <span class="nm">${r.name}</span>
+          <div class="loss-bar"><i style="width:${r.v}%"></i></div>
+          <span class="val">${r.v}</span>
+        </div>`).join('')}
+      <p class="sub">提升顺序：先补高失分项，也别丢低分项。</p>
+    </div>
+
+    <div class="card">
+      <h2><span class="h-ico">🪜</span>三步提升路线</h2>
+      ${DIAG.priority.map((p,i)=>`
+        <div class="stepline">
+          <div class="step-n">${i+1}</div>
+          <div class="step-body"><b>${p.t}</b><p>${p.d}</p></div>
+        </div>`).join('')}
+    </div>
+
+    <div class="card">
+      <h2><span class="h-ico">🧾</span>六大错因（按出现频率）</h2>
+      ${DIAG.causes.map(c=>`
+        <div class="stepline" style="margin:9px 0">
+          <div class="step-n" style="width:auto;border-radius:12px;padding:0 12px;font-size:13px;background:${c.tag==='最高频'?'var(--bad)':'var(--navy)'}">${c.tag}</div>
+          <div class="step-body"><b>${c.t}</b><p>${c.d}</p></div>
+        </div>`).join('')}
+    </div>
+
+    <div class="card">
+      <h2><span class="h-ico">📱</span>微信扫码，随时练习</h2>
+      <div style="display:flex;gap:16px;align-items:center">
+        <img src="qr.png" alt="二维码" style="width:132px;height:132px;border-radius:14px;border:2px solid var(--gold);flex:none"/>
+        <div>
+          <p class="lede" style="margin:0 0 6px">用微信扫一扫这个二维码，<b style="color:var(--navy)">手机上直接做题</b>，进度会自动保存。</p>
+          <div style="font-size:13px;color:var(--dim);word-break:break-all" id="diagUrl"></div>
+        </div>
+      </div>
+    </div>`;
+  if (window.__URL__) $('diagUrl').textContent = window.__URL__;
+}
+
+function renderMethod(){
+  $('view-method').innerHTML = `
+    <div class="card">
+      <h2><span class="h-ico">🗂️</span>错题五步法</h2>
+      <p class="lede">宣，你的错题本不应该是“抄题本”，按下面五步处理，一道错题顶五道。</p>
+      ${METHODS.five.map((s,i)=>`
+        <div class="stepline">
+          <div class="step-n">${i+1}</div>
+          <div class="step-body"><b>${s.t}</b><p>${s.d}</p></div>
+        </div>`).join('')}
+    </div>
+
+    <div class="card">
+      <h2><span class="h-ico">🎫</span>题型通法卡</h2>
+      <p class="lede">把“这一类题”怎么做写下来，考试才反应得快。</p>
+      <div class="grid2">
+        ${METHODS.cards.map(c=>`<div class="mini"><b>${c.t}</b><p>${c.d}</p></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="h-ico">⏰</span>艾宾浩斯复习节奏</h2>
+      <p class="lede">遗忘是正常的，对抗遗忘靠“定时重做”。本页“计划”会自动帮你排期。</p>
+      <table class="cal">
+        <tr><th>当天</th><th>第 1 天</th><th>第 3 天</th><th>第 7 天</th><th>第 14 天</th></tr>
+        <tr><td>订正错题</td><td>重做一次</td><td>再重做</td><td>再做 + 同考点真题</td><td>终检：做对即毕业</td></tr>
+        <tr><td>贴错因</td><td>不看解析</td><td>限时做</td><td>连做 3 题同考点</td><td>正确就移出队列</td></tr>
+      </table>
+      <p class="sub">做错的题，本页会自动进入“第1天→第3天→第7天→第14天”的复习队列。</p>
+    </div>
+
+    <div class="card">
+      <h2><span class="h-ico">⏱️</span>考试时间分配（150 分 / 120 分钟）</h2>
+      ${METHODS.time.map(t=>`
+        <div class="stepline" style="margin:9px 0">
+          <div class="step-n" style="background:var(--gold);color:#5d4308">✓</div>
+          <div class="step-body"><b>${t.t}</b><p>${t.d}</p></div>
+        </div>`).join('')}
+      <div class="mini" style="margin-top:10px">
+        <b>核心策略</b>
+        <p>会做的题一次做对；超过 2 分钟没思路果断跳过；压轴题先把第(1)问的分拿到手。</p>
+      </div>
+    </div>`;
+}
+
+function renderPractice(){
+  const g = curGroup;
+  const qlist = QS.filter(q => g==='all' || q.g===g);
+  $('view-practice').innerHTML = `
+    <div class="card">
+      <h2><span class="h-ico">✍️</span>真题强化营</h2>
+      <p class="lede">全部选自 <b style="color:var(--navy)">2024–2025 新课标Ⅱ卷真题（辽宁省高考适用）</b>，按你的错题考点分组。做错的题自动进复习队列。</p>
+      <div class="chips" id="gchips">
+        ${[{id:'all',name:'全部',icon:'📚',loss:0,tagline:''}].concat(GROUPS).map(gp=>`
+          <button class="chip ${g===gp.id?'on':''}" data-g="${gp.id}">${gp.icon} ${gp.name}${gp.id!=='all'?'·'+gp.loss:''}</button>`).join('')}
+      </div>
+    </div>
+    <div id="qlist">${qlist.map(q=>qCard(q)).join('')}</div>`;
+  $('view-practice').querySelectorAll('.chip').forEach(b=>{
+    b.onclick = ()=>{ curGroup = b.dataset.g; renderPractice(); };
+  });
+  qlist.forEach(q=>initQ(q));
+}
+
+function qCard(q){
+  const isChoice = q.t==='single'||q.t==='multi';
+  const g = GROUPS.find(x=>x.id===q.g);
+  const st = loadAnswers()[q.id];
+  return `
+  <div class="card" data-qid="${q.id}">
+    <div class="q-head">
+      <span class="q-num">${q.num}</span>
+      <span class="tag navy">${q.tag}</span>
+      <span class="tag gold">${g.icon} ${g.name}</span>
+      <span class="tag ${st==='ok'?'green':(st==='bad'?'red':'')}" data-role="sttag" ${st?'':'style="display:none"'}>${st==='ok'?'✓ 已掌握':(st==='bad'?'✗ 已加入复习':'')}</span>
+    </div>
+    <p class="q-stem">${q.stem}</p>
+    ${isChoice ? `
+      <div class="opts" data-role="opts">
+        ${q.opts.map((o,i)=>`
+          <button class="opt" data-i="${i}"><span class="letter">${'ABCD'[i]}</span><span>${o}</span></button>`).join('')}
+      </div>
+      <div class="btns">
+        <button class="btn" data-act="submit">提交答案</button>
+        <button class="btn ghost" data-act="answer">直接看答案</button>
+      </div>` : `
+      <div class="btns">
+        <button class="btn" data-act="answer">看参考答案</button>
+      </div>`}
+    <div class="verdict hidden" data-role="verdict"></div>
+    <div class="sol hidden" data-role="sol"><b>📖 解析</b><p>${q.sol}</p></div>
+    <div class="why hidden" data-role="why"><b></b>${q.why}<p style="margin:8px 0 0;font-size:13.5px;color:var(--dim)">💡 技巧：${q.tip}</p></div>
+  </div>`;
+}
+
+function initQ(q){
+  const card = document.querySelector(`[data-qid="${q.id}"]`);
+  if(!card) return;
+  const isChoice = q.t==='single'||q.t==='multi';
+  const btns = card.querySelectorAll('.btn');
+  const submitBtn = card.querySelector('[data-act="submit"]');
+  const ansBtn = card.querySelector('[data-act="answer"]');
+  const optsBox = card.querySelector('[data-role="opts"]');
+
+  if (isChoice){
+    card._sel = new Set();
+    optsBox.querySelectorAll('.opt').forEach(o=>{
+      o.onclick = ()=>{
+        if (card._locked) return;
+        const i = Number(o.dataset.i);
+        if (q.t==='single'){ card._sel.clear(); }
+        if (card._sel.has(i)) card._sel.delete(i); else card._sel.add(i);
+        optsBox.querySelectorAll('.opt').forEach(x=>{
+          const xi = Number(x.dataset.i);
+          x.classList.toggle('sel', card._sel.has(xi));
+        });
+      };
+    });
+    submitBtn.onclick = ()=>{ if(card._sel.size===0){ toast('先选答案再提交哦'); return; } judgeQ(q, card); };
+    ansBtn.onclick = ()=>{ if(!card._locked){ card._locked=true; showAns(q, card, true, null); } };
+  } else {
+    ansBtn.onclick = ()=>{ showAns(q, card, true, null); };
+  }
+}
+
+function judgeQ(q, card){
+  if (card._locked) return;
+  card._locked = true;
+  const ansSet = Array.isArray(q.ans) ? new Set(q.ans) : new Set([q.ans]);
+  let ok = false;
+  if (q.t==='single'){ ok = [...card._sel][0] === q.ans; }
+  else { ok = card._sel.size===ansSet.size && [...card._sel].every(x=>ansSet.has(x)); }
+  const v = card.querySelector('[data-role="verdict"]');
+  const ansShow = Array.isArray(q.ans) ? q.ans.map(i=>'ABCD'[i]).join('、') : 'ABCD'[q.ans];
+  v.classList.remove('hidden');
+  v.classList.add(ok?'ok':'bad');
+  v.innerHTML = ok
+    ? `<b>✅ 答对了！</b> 这一题归为“掌握”，下次在复习计划里能看到它。`
+    : `<b>❌ 答错了。</b> 正确答案：<b>${ansShow}</b>。已自动加入复习队列（第 1 天重做）。`;
+  markAnswer(q.id, ok);
+  showAns(q, card, false, ok);
+}
+
+function showAns(q, card, selfRate, judged){
+  card.querySelector('[data-role="sol"]').classList.remove('hidden');
+  card.querySelector('[data-role="why"]').classList.remove('hidden');
+  const v = card.querySelector('[data-role="verdict"]');
+  if (judged===null){
+    // 直接看答案 / 填空解答：给出自评按钮
+    v.classList.remove('hidden');
+    v.classList.add('bad');
+    v.innerHTML = `<b>📝 参考答案</b>${q.t==='solve'?'（解答题，按解析步骤自己核对）':''}<br/>${q.ansText}
+      <div class="btns" style="margin-top:10px">
+        <button class="btn" data-self="ok">我做对了 ✓</button>
+        <button class="btn gold" data-self="bad">我做错了，加入复习 ✗</button>
+      </div>`;
+    const b1 = v.querySelector('[data-self="ok"]'), b2 = v.querySelector('[data-self="bad"]');
+    b1.onclick = ()=>{ markAnswer(q.id, true); v.innerHTML = '<b>✅ 好样的，已记录“掌握”。</b>'; renderPlanLight(); toast('已记录 ✓'); };
+    b2.onclick = ()=>{ markAnswer(q.id, false); v.innerHTML = '<b>❌ 已加入复习队列（第 1 天重做）。</b>'; renderPlanLight(); toast('已加入复习队列'); };
+  } else if (judged===false){
+    const already = !!(loadReview()[q.id]);
+    if (!already){
+      const b = v.querySelector('[data-self]');
+    }
+  }
+  renderPlanLight();
+}
+
+function renderPlanLight(){ /* 轻量刷新计划页（若可见） */ if (curView==='plan') renderPlan(); }
+
+function renderPlan(){
+  const A = loadAnswers(), R = loadReview();
+  const done = Object.keys(A).length, okN = Object.values(A).filter(x=>x==='ok').length;
+  const rate = done? Math.round(okN/done*100) : 0;
+  const due = Object.values(R).filter(x=>x.next<=Date.now()).length;
+  $('view-plan').innerHTML = `
+    <div class="card">
+      <h2><span class="h-ico">📊</span>复习总览</h2>
+      <div class="grid2" style="margin-bottom:8px">
+        <div class="mini"><b>已完成</b><p>${done} / ${QS.length} 题</p></div>
+        <div class="mini"><b>正确率</b><p style="font-size:22px;font-weight:800;color:${rate>=80?'var(--ok)':'var(--navy)'}">${rate}%</p></div>
+        <div class="mini"><b>复习中</b><p>${Object.keys(R).length} 题</p></div>
+        <div class="mini"><b>今天到期</b><p style="color:${due? 'var(--bad)':'var(--ok)'}">${due} 题</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="h-ico">📈</span>各考点掌握度</h2>
+      ${GROUPS.map(g=>{
+        const qs = QS.filter(q=>q.g===g.id);
+        const d = qs.filter(q=>A[q.id]).length;
+        const o = qs.filter(q=>A[q.id]==='ok').length;
+        const pct = d? Math.round(o/d*100):0;
+        return `<div class="bar-row">
+          <span class="nm">${g.icon} ${g.name}</span>
+          <div class="bar-track"><i style="width:${d?pct:0}%"></i></div>
+          <span class="val">${d? pct+'% ('+o+'/'+d+')':'未做'}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="card">
+      <h2><span class="h-ico">🗓️</span>复习队列（艾宾浩斯 1·3·7·14 天）</h2>
+      <div id="rvlist">
+        ${Object.keys(R).length===0 ? `<p class="lede" style="color:var(--dim)">还没有复习任务。去“真题”页做错题后，会自动排到这里。</p>` : `
+          ${Object.keys(R).map(id=>{
+            const q = QS.find(x=>x.id===id);
+            const rv = R[id];
+            const g = GROUPS.find(x=>x.id===q.g);
+            const days = Math.ceil((rv.next-Date.now())/86400000);
+            const dueNow = rv.next<=Date.now();
+            return `<div class="rv-item" data-rv="${id}">
+              <div class="q-t"><b>${g.icon} ${q.tag} · ${q.num}</b><small>${q.stem.replace(/<[^>]+>/g,'').slice(0,30)}…</small></div>
+              <div class="rv-due">${dueNow? '🔔 今天复习':'还有 '+days+' 天'}</div>
+              <button class="btn ghost" style="flex:none;min-width:0;padding:9px 14px;font-size:14px" data-rvok="${id}">✓ 复习了</button>
+            </div>`;
+          }).join('')}`}
+      </div>
+      <p class="sub">点“复习了”：做对 → 进入下一个节点（3/7/14 天）；做错 → 回到第 1 天重新来。</p>
+    </div>
+    <div class="card">
+      <h2><span class="h-ico">🔄</span>重置进度</h2>
+      <button class="btn gold" data-reset="1">清空所有做题记录</button>
+      <p class="sub" style="margin-top:8px">换一个考点集训前可以清一次，进度只存在你手机浏览器里。</p>
+    </div>`;
+  $('view-plan').querySelectorAll('[data-rvok]').forEach(b=>{
+    b.onclick = ()=>{ finishReview(b.dataset.rvok); };
+  });
+  const rb = $('view-plan').querySelector('[data-reset]');
+  if (rb) rb.onclick = ()=>{ localStorage.removeItem(LSKEY); toast('已清空'); renderPlan(); renderPractice(); };
+}
+
+function finishReview(id){
+  const R = loadReview(), A = loadAnswers();
+  if (!R[id]) return;
+  const rv = R[id];
+  // 做对 → 下一节点；做错 → 回到第1天。默认按做对推进，若标过错则重置
+  const wasBad = A[id]==='bad' && rv.stage===0 && rv.next<=Date.now() && (rv._justWrong);
+  if (rv.stage >= 3){
+    delete R[id]; toast('🎓 14 天通过，毕业！');
+  } else {
+    rv.stage++;
+    const iv = [1,3,7,14];
+    if (rv.stage >= 4){ delete R[id]; toast('🎓 毕业！'); }
+    else { rv.next = Date.now() + iv[rv.stage]*86400000; toast('✓ 进入第 '+iv[rv.stage]+' 天复习'); }
+  }
+  saveReview(R);
+  renderPlan();
+}
+
+/* ================= 导航 ================= */
+let curView = 'diag', curGroup = 'all';
+
+function switchView(v){
+  curView = v;
+  ['diag','method','practice','plan'].forEach(x=>{
+    $('view-'+x).classList.toggle('on', x===v);
+  });
+  document.querySelectorAll('nav button').forEach(b=>{
+    b.classList.toggle('on', b.dataset.tab===v);
+  });
+  if (v==='plan') renderPlan();
+  if (v==='practice') renderPractice();
+  if (v==='method') renderMethod();
+  if (v==='diag') renderDiag();
+}
+/* __JS_RENDER_END__ */
+/* ================= 存储与交互逻辑 ================= */
+const LSKEY = 'xuan_math_v1';
+
+function _readStore(){
+  try{
+    const o = JSON.parse(localStorage.getItem(LSKEY) || '{}');
+    return (o && typeof o==='object') ? o : {};
+  }catch(e){ return {}; }
+}
+function _writeStore(o){
+  try{ localStorage.setItem(LSKEY, JSON.stringify(o)); }catch(e){}
+}
+function loadAnswers(){ return _readStore().answers || {}; }
+function saveAnswers(a){ const o=_readStore(); o.answers=a; _writeStore(o); }
+function loadReview(){ return _readStore().review || {}; }
+function saveReview(r){ const o=_readStore(); o.review=r; _writeStore(o); }
+
+function markAnswer(id, ok){
+  const A = loadAnswers();
+  A[id] = ok ? 'ok' : 'bad';
+  saveAnswers(A);
+  if (!ok){
+    const R = loadReview();
+    // 做错：进入复习队列，从“第 1 天”开始
+    R[id] = { stage:0, next:Date.now()+86400000, _justWrong:true };
+    saveReview(R);
+  }
+}
+
+let _toastTimer = null;
+function toast(msg){
+  const t = $('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.remove('show');
+  void t.offsetWidth;   // 重启动画
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(()=>{ t.classList.remove('show'); }, 1100);
+}
+
+/* ================= 初始化 ================= */
+window.__URL__ = 'https://fivefingersmountain.github.io/for-xuan/';
+document.querySelectorAll('nav .tabs button').forEach(b=>{
+  b.onclick = ()=> switchView(b.dataset.tab);
+});
+switchView('diag');
+
+</script>
+</body>
+</html>
