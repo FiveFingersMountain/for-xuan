@@ -2130,8 +2130,10 @@ function renderPractice(){
       <h2><span class="h-ico">✍️</span>真题强化营</h2>
       <p class="lede">全部选自 <b style="color:var(--navy)">2021–2025 新课标Ⅱ卷真题（辽宁省高考适用）</b>，按你的错题考点分组。做错的题自动进复习队列。</p>
       <div class="chips" id="gchips">
-        ${[{id:'all',name:'全部',icon:'📚',loss:0,tagline:''}].concat(GROUPS).map(gp=>`
-          <button class="chip ${g===gp.id?'on':''}" data-g="${gp.id}">${gp.icon} ${gp.name}${gp.id!=='all'?'·'+gp.loss:''}</button>`).join('')}
+        ${[{id:'all',name:'全部',icon:'📚'}].concat(GROUPS).map(gp=>{
+          const n = gp.id==='all' ? QS.length : QS.filter(q=>q.g===gp.id).length;
+          return `<button class="chip ${g===gp.id?'on':''}" data-g="${gp.id}">${gp.icon} ${gp.name}·${n}</button>`;
+        }).join('')}
       </div>
     </div>
     <div id="qlist">${qlist.map(q=>qCard(q)).join('')}</div>`;
