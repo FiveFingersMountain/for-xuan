@@ -24,7 +24,7 @@
       linear-gradient(180deg,#fbf8f1,var(--paper) 40%,#f2eee4);
     padding-bottom:84px;
   }
-  .app{width:100%; max-width:640px; margin:0 auto; padding:10px 12px 18px;}
+  .app{width:100%; max-width:640px; margin:0 auto; padding:10px 12px 96px;}
 
   /* ================= 顶栏 ================= */
   header{display:flex; align-items:center; gap:10px; padding:8px 2px 12px;}
@@ -77,11 +77,10 @@
   .loss-bar i{display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,#f2c96b,#e8843c);}
   .loss-row .val{flex:none; width:34px; text-align:right; font-weight:800; color:var(--navy); font-size:15px;}
 
-  .chips{display:flex; gap:8px; overflow-x:auto; padding:4px 2px 10px; scrollbar-width:none;}
-  .chips::-webkit-scrollbar{display:none;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; padding:4px 2px 10px;}
   .chip{
-    flex:none; border:none; cursor:pointer; border-radius:999px; padding:9px 16px;
-    font-family:inherit; font-size:15px; font-weight:700; color:#5a6472;
+    flex:none; border:none; cursor:pointer; border-radius:999px; padding:9px 14px;
+    font-family:inherit; font-size:14.5px; font-weight:700; color:#5a6472;
     background:#fff; border:1.5px solid var(--line); box-shadow:0 3px 8px rgba(60,52,30,.05);
   }
   .chip.on{background:var(--navy); color:#fff; border-color:var(--navy);}
